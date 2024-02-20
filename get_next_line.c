@@ -6,7 +6,7 @@
 /*   By: healeksa <healeksa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 15:00:52 by healeksa          #+#    #+#             */
-/*   Updated: 2024/02/19 19:24:21 by healeksa         ###   ########.fr       */
+/*   Updated: 2024/02/20 20:21:39 by healeksa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@ char	*read_file(int fd, char *reminder)
 	if (!buff)
 		return (NULL);
 	read_res = 1;
-	if (!reminder)
-		reminder = ft_strdup("");
 	while (read_res != 0 && !(ft_strchr(reminder, '\n')))
 	{
 		read_res = read(fd, buff, BUFFER_SIZE);
@@ -43,6 +41,8 @@ char	*processing(char *str)
 	char	*proc_str;
 	int		i;
 
+	if (!str || !str[0])
+		return (NULL);
 	i = 0;
 	while (str[i] != '\n' && str[i] != '\0')
 		i++;
@@ -56,10 +56,17 @@ char	*clean_reminder(char *reminder)
 	int		len;
 	char	*tmp;
 
+	if (!reminder)
+		return (NULL);
 	len = ft_strlen(reminder);
 	i = 0;
-	while (reminder[i] != '\n')
+	while (reminder[i] != '\n' && reminder[i] != '\0')
 		i++;
+	if (!reminder[i])
+	{
+		free(reminder);
+		return (NULL);
+	}
 	tmp = ft_substr(reminder, i + 1, len - i);
 	free(reminder);
 	return (tmp);
@@ -70,11 +77,9 @@ char	*get_next_line(int fd)
 	static char	*reminder;
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	reminder = read_file(fd, reminder);
-	if (!reminder)
-		return (NULL);
 	line = processing(reminder);
 	reminder = clean_reminder(reminder);
 	return (line);
