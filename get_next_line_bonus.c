@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: healeksa <healeksa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/11 15:00:52 by healeksa          #+#    #+#             */
-/*   Updated: 2024/02/20 20:39:00 by healeksa         ###   ########.fr       */
+/*   Created: 2024/02/20 20:30:46 by healeksa          #+#    #+#             */
+/*   Updated: 2024/02/20 20:40:18 by healeksa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*read_file(int fd, char *reminder)
 {
@@ -74,13 +74,13 @@ char	*clean_reminder(char *reminder)
 
 char	*get_next_line(int fd)
 {
-	static char	*reminder;
+	static char	*reminder[DESCRIPTOR_COUNT];
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	reminder = read_file(fd, reminder);
-	line = processing(reminder);
-	reminder = clean_reminder(reminder);
+	reminder[fd] = read_file(fd, reminder[fd]);
+	line = processing(reminder[fd]);
+	reminder[fd] = clean_reminder(reminder[fd]);
 	return (line);
 }
