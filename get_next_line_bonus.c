@@ -6,7 +6,7 @@
 /*   By: healeksa <healeksa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 20:30:46 by healeksa          #+#    #+#             */
-/*   Updated: 2024/02/20 20:40:18 by healeksa         ###   ########.fr       */
+/*   Updated: 2024/02/21 16:24:52 by healeksa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,12 @@ char	*get_next_line(int fd)
 	static char	*reminder[DESCRIPTOR_COUNT];
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	{
+		free(reminder[fd]);
+		reminder[fd] = NULL;
 		return (NULL);
+	}
 	reminder[fd] = read_file(fd, reminder[fd]);
 	line = processing(reminder[fd]);
 	reminder[fd] = clean_reminder(reminder[fd]);
